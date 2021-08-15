@@ -1,7 +1,7 @@
-import axios from 'axios';
+import { createApi } from 'unsplash-js'
 
-const API_URI = '';
+const instance = createApi({
+  accessKey: process.env.REACT_APP_UNSPLASH_ACCESS_KEY
+});
 
-export const getPhotos = () => {};
-
-export const getPhoto = () => {};
+export default instance;
