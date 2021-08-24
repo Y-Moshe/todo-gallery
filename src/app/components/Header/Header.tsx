@@ -16,7 +16,7 @@ interface HeaderProps {
   onAppearanceChange: ( mode: PaletteType ) => void;
 }
 
-export default function Header( props: HeaderProps ) {
+export function Header( props: HeaderProps ) {
   const widthAnim = useSpring({
     from: {
       opacity: 0,

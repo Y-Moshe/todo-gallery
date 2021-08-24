@@ -9,7 +9,7 @@ const PHOTO_HEIGHT = 256;
 
 interface PhotoProps extends IPhoto {}
 
-export default function Photo( props: PhotoProps ) {
+export function Photo( props: PhotoProps ) {
   const animStyle = useSpring({
     config: {duration: 500},
     from: { opacity: 0 },

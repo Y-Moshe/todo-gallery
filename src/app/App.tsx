@@ -10,9 +10,9 @@ import {
 } from '@material-ui/core';
 
 import { getPhotos, IPhoto } from '../API';
-import Header from './components/Header/Header';
-import Photo from './containers/Photo/Photo';
-import Pagination from './components/UI/Pagination/Pagination';
+import { Header } from './components';
+import { Pagination } from './components/UI';
+import { Photo } from './containers';
 
 const useStyles = makeStyles(() => createStyles({
   galleryWrapper: {

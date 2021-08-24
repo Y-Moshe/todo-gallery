@@ -14,7 +14,7 @@ interface PaginationProps {
 
 const ITEMS_PER_PAGE_OPTIONS = [ 10, 15, 20, 25, 30 ];
 
-export default function Pagination( props: PaginationProps ) {
+export function Pagination( props: PaginationProps ) {
   const prevProps = usePrevious( props );
   const paginationAnim = useSpring({
     from: {
