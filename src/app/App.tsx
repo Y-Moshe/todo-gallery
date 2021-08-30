@@ -1,40 +1,24 @@
-import { useState, useEffect, useMemo } from 'react';
-import {
-  Container,
-  ThemeProvider,
-  createTheme,
-  PaletteType,
-  makeStyles,
-  createStyles,
-  colors
-} from '@material-ui/core';
+import { useState, useEffect } from 'react';
+import { ThemeProvider, createTheme, PaletteType, colors } from '@material-ui/core';
 
 import { getPhotos, IPhoto } from '../API';
-import { Header } from './components';
-import { Pagination } from './components/UI';
-import { Photo } from './containers';
+import { Header, UI } from './components';
+import { Photos } from './containers';
 
-const useStyles = makeStyles(() => createStyles({
-  galleryWrapper: {
-    margin: 50,
-    display: 'flex',
-    justifyContent: 'center',
-    flexWrap: 'wrap'
-  }
-}));
+export type DirectionAnimation = 'left' | 'right';
 
 export default function App() {
-  const [ photos,       setPhotos ]       = useState<IPhoto[]>( [] );
-  const [ totalItems,   setTotalItems ]   = useState( 0 );
-  const [ currentPage,  setCurrentPage ]  = useState( 0 );
-  const [ itemsPerPage, setItemsPerPage ] = useState( 10 );
-  const [ appearance,   setAppearance ]   = useState<PaletteType>( 'light' );
-  const theme   = createTheme({
+  const [ photos,        setPhotos ]        = useState<IPhoto[]>( [] );
+  const [ totalItems,    setTotalItems ]    = useState( 0 );
+  const [ currentPage,   setCurrentPage ]   = useState( 0 );
+  const [ itemsPerPage,  setItemsPerPage ]  = useState( 10 );
+  const [ appearance,    setAppearance ]    = useState<PaletteType>( 'light' );
+  const [ directionAnim, setDirectionAnim ] = useState<DirectionAnimation>( 'right' );
+  const theme = createTheme({
     palette: {
       type: appearance
     }
   });
-  const classes = useStyles();
 
   useEffect(() => {
     getPhotos( currentPage + 1, itemsPerPage)
@@ -46,40 +30,50 @@ export default function App() {
     });
   }, [ currentPage, itemsPerPage ]);
 
-  const photoList = useMemo(() => {
-    return photos.map( photo => (
-      <Photo { ...photo }
-        key = { photo.id } />
-    ));
-  }, [ photos ]);
+  const handlePageChange = ( latestPage: number ) => {
+    setDirectionAnim( currentPage < latestPage ? 'right' : 'left' );
+    setCurrentPage( latestPage );
+  };
+
+  const handlePhotoClicked = ( id: string ) => {
+    console.log(id);
+  };
 
   const pagination = (
-    <Pagination
+    <UI.Pagination
       appearance   = { appearance }
       totalItems   = { totalItems }
       currentPage  = { currentPage }
       itemsPerPage = { itemsPerPage }
-      onPageChange = { latestPage => setCurrentPage( latestPage ) }
+      onPageChange = { handlePageChange }
       onItemsPerPageChange = { items => setItemsPerPage( items ) } />
   );
 
+  const appStyle: React.CSSProperties = {
+    backgroundColor: appearance === 'light'
+      ? theme.palette.common.white
+      : colors.grey[800],
+    display: 'flex',
+    flexDirection: 'column',
+    minHeight: '100vh'
+  };
 
   return (
-    <div style = {{ backgroundColor: appearance === 'light'
-        ? theme.palette.common.white
-        : colors.grey[800] }}>
+    <div style = { appStyle }>
       <ThemeProvider theme = { theme }>
         <Header
           appearance         = { appearance }
           onAppearanceChange = { mode => setAppearance( mode ) } />
 
-        <Container style = {{ paddingTop: 24, paddingBottom: 24 }}>
-          { pagination }
+        { pagination }
 
-          <div className = { classes.galleryWrapper }>{ photoList }</div>
+        <Photos
+          directionAnim = { directionAnim }
+          appearance    = { appearance }
+          photos        = { photos }
+          onPhotoClick  = { handlePhotoClicked } />
 
-          { pagination }
-        </Container>
+        { pagination }
       </ThemeProvider>
     </div>
   );
