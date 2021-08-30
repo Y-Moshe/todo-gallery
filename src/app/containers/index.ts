@@ -1,1 +1,2 @@
-export { Photo } from './Photo/Photo';
+export { Photo } from './Photos/Photo/Photo';
+export { Photos } from './Photos/Photos';
