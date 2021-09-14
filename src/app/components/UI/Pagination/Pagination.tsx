@@ -12,7 +12,7 @@ interface PaginationProps {
   onItemsPerPageChange: ( items: number ) => void;
 }
 
-const ITEMS_PER_PAGE_OPTIONS = [ 10, 15, 20, 25, 30 ];
+const ITEMS_PER_PAGE_OPTIONS = [ 9, 12, 15, 18, 21 ];
 
 export function Pagination( props: PaginationProps ) {
   const prevProps = usePrevious( props );
