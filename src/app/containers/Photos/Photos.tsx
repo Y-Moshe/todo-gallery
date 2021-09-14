@@ -1,35 +1,46 @@
 import { useMemo } from 'react';
 import { useTrail, a } from 'react-spring';
-import { PaletteType } from '@material-ui/core';
+import { PaletteType, makeStyles, createStyles } from '@material-ui/core';
 
 import { IPhoto } from '../../../API';
 import { Photo } from '../../containers';
 import { DirectionAnimation } from '../../App';
 
-const galleryWrapperStyle: React.CSSProperties = {
-  flexGrow: 1,
-  margin: 50,
-  display: 'flex',
-  justifyContent: 'center',
-  flexWrap: 'wrap'
-};
+const useStyles = makeStyles(({ palette }) => createStyles({
+  galleryContainer: {
+    flexGrow: 1,
+    margin: 50,
+    display: 'grid',
+    gap: 24,
+    justifyContent: 'center',
+    gridTemplateColumns: '256px',
+    '@media (min-width: 512px)': {
+      gridTemplateColumns: '256px 256px'
+    },
+    '@media (min-width: 768px)': {
+      gridTemplateColumns: '256px 256px 256px'
+    }
+  }
+}));
 
 interface PhotosProps {
+  itemsPerPage: number;
   appearance: PaletteType;
   photos: IPhoto[];
   directionAnim: DirectionAnimation;
-  onPhotoClick: ( id: string ) => void;
+  onPhotoClick: ( photo: IPhoto ) => void;
 }
 
 export function Photos( props: PhotosProps ) {
+  const classes = useStyles();
   const trail = useTrail( props.photos.length, {
     from: {
       transform: props.directionAnim === 'right'
-        ? 'translateX(150px)'
-        : 'translateX(-150px)'
+        ? 'translateY(-100px)'
+        : 'translateY(100px)'
     },
     to: {
-      transform: 'translateX(0)'
+      transform: 'translateY(0)'
     },
     config: {
       mass: 5,
@@ -38,24 +49,21 @@ export function Photos( props: PhotosProps ) {
     reset: true
   });
 
-  const photoList = useMemo(() => { 
-    return props.photos.map( photo => (
-      <Photo key = { photo.id } { ...photo }
-        onClick  = { props.onPhotoClick }/>
+  const photoList = useMemo(() => {
+    return props.photos.map(( photo, i ) => (
+      <a.div key = { photo.id } style = { trail[i] }>
+        <Photo { ...photo }
+          onClick  = { props.onPhotoClick }/>
+      </a.div>
     ));
-  }, [ props.photos, props.onPhotoClick ])
+  }, [ props.photos, props.onPhotoClick, trail ]);
+  const itemsPerColumn = props.itemsPerPage / 3;
 
   return (
-    <div style = { galleryWrapperStyle }>
-      {
-        trail.map(( animStyle, i ) => (
-          <a.div
-            style = { animStyle }
-            key = { props.photos[i].id }>
-            { photoList[i] }
-          </a.div>
-        ))
-      }
+    <div className = { classes.galleryContainer }>
+      <div>{ photoList.slice(0, itemsPerColumn).map( item => item ) }</div>
+      <div>{ photoList.slice(itemsPerColumn, itemsPerColumn*2).map( item => item ) }</div>
+      <div>{ photoList.slice(itemsPerColumn*2, itemsPerColumn*3).map( item => item ) }</div>
     </div>
   )
 }
