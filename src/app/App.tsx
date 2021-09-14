@@ -1,19 +1,21 @@
 import { useState, useEffect } from 'react';
 import { ThemeProvider, createTheme, PaletteType, colors } from '@material-ui/core';
 
-import { getPhotos, IPhoto } from '../API';
+import { getPhotos, IPhoto, getPhotoStats, PStats } from '../API';
 import { Header, UI } from './components';
 import { Photos } from './containers';
 
 export type DirectionAnimation = 'left' | 'right';
+interface FullPhotoInfo extends IPhoto, PStats {}
 
 export default function App() {
   const [ photos,        setPhotos ]        = useState<IPhoto[]>( [] );
   const [ totalItems,    setTotalItems ]    = useState( 0 );
   const [ currentPage,   setCurrentPage ]   = useState( 0 );
-  const [ itemsPerPage,  setItemsPerPage ]  = useState( 10 );
+  const [ itemsPerPage,  setItemsPerPage ]  = useState( 9 );
   const [ appearance,    setAppearance ]    = useState<PaletteType>( 'light' );
   const [ directionAnim, setDirectionAnim ] = useState<DirectionAnimation>( 'right' );
+  const [ fullPhotoInfo, setFullPhotoInfo ] = useState<FullPhotoInfo>();
   const theme = createTheme({
     palette: {
       type: appearance
@@ -25,9 +27,7 @@ export default function App() {
       .then( response => {
         setPhotos( response?.results || [] );
         setTotalItems(  response?.total   || 0 );
-    }).catch( error => {
-      console.log(error);
-    });
+    }).catch( error => console.log( error ));
   }, [ currentPage, itemsPerPage ]);
 
   const handlePageChange = ( latestPage: number ) => {
@@ -35,8 +35,11 @@ export default function App() {
     setCurrentPage( latestPage );
   };
 
-  const handlePhotoClicked = ( id: string ) => {
-    console.log(id);
+  const handlePhotoClicked = ( photo: IPhoto ) => {
+    getPhotoStats( photo.id )
+      .then( response => {
+        setFullPhotoInfo({ ...response as PStats, ...photo });
+    }).catch( error => console.log( error ));
   };
 
   const pagination = (
@@ -68,12 +71,18 @@ export default function App() {
         { pagination }
 
         <Photos
+          itemsPerPage  = { itemsPerPage }
           directionAnim = { directionAnim }
           appearance    = { appearance }
           photos        = { photos }
           onPhotoClick  = { handlePhotoClicked } />
 
         { pagination }
+
+        <UI.PhotoStatsDialog
+          { ...fullPhotoInfo as FullPhotoInfo }
+          isOpen  = { fullPhotoInfo !== undefined }
+          onClose = { () => setFullPhotoInfo( undefined ) } />
       </ThemeProvider>
     </div>
   );

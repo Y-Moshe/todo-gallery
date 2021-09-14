@@ -54,7 +54,7 @@ const PHOTO_WIDTH  = 256;
 const PHOTO_HEIGHT = 256;
 
 interface PhotoProps extends IPhoto {
-  onClick: ( id: string ) => void;
+  onClick: ( photo: IPhoto ) => void;
 }
 
 export function Photo( props: PhotoProps ) {
@@ -82,7 +82,7 @@ export function Photo( props: PhotoProps ) {
           config: { mass: 3, tension: 280 }
         }).start();
         break;
-        case 'UP':
+      case 'UP':
         slideAnimCtrl.update({
           from: { transform: 'scale(1)' },
           to: { transform: 'scale(0)' },
@@ -93,7 +93,7 @@ export function Photo( props: PhotoProps ) {
   };
 
   return (
-    <div onClick = { () => props.onClick( props.id ) }>
+    <div onClick = { () => props.onClick( props ) }>
       {
         isLoading &&
         <Blurhash
@@ -112,8 +112,8 @@ export function Photo( props: PhotoProps ) {
           hidden = { isLoading }
           src    = { props.urls.small }
           alt    = { props.alt_description as string }
-          onLoad = { () => setIsLoading( false ) }
-          height = { PHOTO_HEIGHT } />
+          onLoad = { () => setTimeout(() => setIsLoading( false ), 1000)  }
+          width = { PHOTO_WIDTH } />
         {
           !isLoading &&
           <>
