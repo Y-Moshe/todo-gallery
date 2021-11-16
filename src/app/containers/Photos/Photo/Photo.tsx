@@ -15,7 +15,8 @@ const useStyles = makeStyles(({ palette }) => createStyles({
       : palette.grey[900] }`,
     borderRadius: 15,
     color: 'white',
-    cursor: 'pointer'
+    cursor: 'pointer',
+    width: 256
   },
   titleStyle: {
     position: 'absolute',
@@ -102,10 +103,10 @@ export function Photo( props: PhotoProps ) {
           height = { PHOTO_HEIGHT } />
       }
       <a.div
+        style = { bounceAnim }
         className    = { classes.photoStyle }
         onMouseEnter = { () => handleShadowSlide( 'DOWN' ) }
-        onMouseLeave = { () => handleShadowSlide( 'UP' ) }
-        style = { bounceAnim }>
+        onMouseLeave = { () => handleShadowSlide( 'UP' ) }>
         <a.div className = { classes.slider } style = { slideAnim }></a.div>
         <img
           style  = {{ borderRadius: 15 }}
@@ -113,7 +114,8 @@ export function Photo( props: PhotoProps ) {
           src    = { props.urls.small }
           alt    = { props.alt_description as string }
           onLoad = { () => setTimeout(() => setIsLoading( false ), 1000)  }
-          width = { PHOTO_WIDTH } />
+          width = { PHOTO_WIDTH }
+        />
         {
           !isLoading &&
           <>
