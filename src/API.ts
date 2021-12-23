@@ -16,6 +16,4 @@ export const getPhotoStats = async ( id: string ) => {
   return response.response;
 }
 
-export type { Basic as IPhoto } from 'unsplash-js/dist/methods/photos/types';
-export type { Stats as PStats } from 'unsplash-js/dist/methods/photos/types';
 export default instance;

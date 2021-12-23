@@ -26,7 +26,7 @@ import {
 } from '@material-ui/icons';
 import { animated } from 'react-spring';
 
-import { IPhoto, PStats } from '../../../../API';
+import { IPhoto, PStats } from '../../../types';
 import { useSpringNumber } from '../../../hooks';
 
 interface PhotoStatsDialogProps extends IPhoto, PStats {
