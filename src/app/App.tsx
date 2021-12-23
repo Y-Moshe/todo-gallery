@@ -1,12 +1,9 @@
 import { useState, useEffect } from 'react';
-import { ThemeProvider, createTheme, PaletteType, colors } from '@material-ui/core';
+import { ThemeProvider, createTheme, colors } from '@material-ui/core';
 
-import { getPhotos, IPhoto, getPhotoStats, PStats } from '../API';
-import { Header, UI } from './components';
-import { Photos } from './containers';
-
-export type DirectionAnimation = 'left' | 'right';
-interface FullPhotoInfo extends IPhoto, PStats {}
+import { Header, Pagination, Photos, PhotoStatsDialog } from './components';
+import { DirectionAnimation, FullPhotoInfo, IPhoto, PaletteType, PStats } from './types';
+import { getPhotos, getPhotoStats } from '../API';
 
 export default function App() {
   const [ photos,        setPhotos ]        = useState<IPhoto[]>( [] );
@@ -43,13 +40,14 @@ export default function App() {
   };
 
   const pagination = (
-    <UI.Pagination
+    <Pagination
       appearance   = { appearance }
       totalItems   = { totalItems }
       currentPage  = { currentPage }
       itemsPerPage = { itemsPerPage }
       onPageChange = { handlePageChange }
-      onItemsPerPageChange = { items => setItemsPerPage( items ) } />
+      onItemsPerPageChange = { items => setItemsPerPage( items ) }
+    />
   );
 
   const appStyle: React.CSSProperties = {
@@ -66,7 +64,8 @@ export default function App() {
       <ThemeProvider theme = { theme }>
         <Header
           appearance         = { appearance }
-          onAppearanceChange = { mode => setAppearance( mode ) } />
+          onAppearanceChange = { mode => setAppearance( mode ) }
+        />
 
         { pagination }
 
@@ -75,14 +74,16 @@ export default function App() {
           directionAnim = { directionAnim }
           appearance    = { appearance }
           photos        = { photos }
-          onPhotoClick  = { handlePhotoClicked } />
+          onPhotoClick  = { handlePhotoClicked }
+        />
 
         { pagination }
 
-        <UI.PhotoStatsDialog
+        <PhotoStatsDialog
           { ...fullPhotoInfo as FullPhotoInfo }
           isOpen  = { fullPhotoInfo !== undefined }
-          onClose = { () => setFullPhotoInfo( undefined ) } />
+          onClose = { () => setFullPhotoInfo( undefined ) }
+        />
       </ThemeProvider>
     </div>
   );
