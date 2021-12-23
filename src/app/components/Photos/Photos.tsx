@@ -2,9 +2,8 @@ import { useMemo } from 'react';
 import { useTrail, a } from 'react-spring';
 import { PaletteType, makeStyles, createStyles } from '@material-ui/core';
 
-import { IPhoto } from '../../../API';
-import { Photo } from '../../containers';
-import { DirectionAnimation } from '../../App';
+import { Photo } from '../../components';
+import { DirectionAnimation, IPhoto } from '../../types';
 
 const useStyles = makeStyles(({ palette }) => createStyles({
   galleryContainer: {

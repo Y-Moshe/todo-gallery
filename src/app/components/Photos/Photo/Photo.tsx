@@ -4,7 +4,7 @@ import { useSpring, a } from 'react-spring';
 import { FavoriteBorder } from '@material-ui/icons';
 import { makeStyles, createStyles, Link } from '@material-ui/core';
 
-import { IPhoto } from '../../../../API';
+import { IPhoto } from '../../../types';
 
 const useStyles = makeStyles(({ palette }) => createStyles({
   photoStyle: {
