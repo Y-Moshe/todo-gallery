@@ -62,7 +62,7 @@ export function Photo( props: PhotoProps ) {
   const [ isLoading, setIsLoading ] = useState( true );
   const classes    = useStyles();
   const bounceAnim = useSpring({
-    from: { transform: 'scale(0.5)' },
+    from: { transform: 'scale(0.8)' },
     to: { transform: 'scale(1)' },
     reset: true
   });
