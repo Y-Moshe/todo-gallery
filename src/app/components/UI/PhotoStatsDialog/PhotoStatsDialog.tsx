@@ -3,9 +3,7 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  Button,
   IconButton,
-  Divider,
   TableContainer,
   Table,
   TableHead,
@@ -14,7 +12,10 @@ import {
   TableBody,
   Paper,
   Tooltip,
-  Link
+  Link,
+  CircularProgress,
+  Fade,
+  Grow
 } from '@material-ui/core';
 import {
   Close,
@@ -24,10 +25,11 @@ import {
   CloudDownload,
   EventAvailable
 } from '@material-ui/icons';
-import { animated } from 'react-spring';
+import { a } from 'react-spring';
 
 import { IPhoto, PStats } from '../../../types';
 import { useSpringNumber } from '../../../hooks';
+import { useEffect, useState } from 'react';
 
 interface PhotoStatsDialogProps extends IPhoto, PStats {
   isOpen: boolean;
@@ -43,6 +45,12 @@ const tableHeaderData = [
 ];
 
 export function PhotoStatsDialog( props: PhotoStatsDialogProps ) {
+  const [ isPhotoLoaded, setPhotoLoad ] = useState( false );
+
+  useEffect(() => {
+    setPhotoLoad( false );
+  }, [ props?.urls?.full ]);
+
   const viewsNum     = useSpringNumber( props?.views?.total );
   const likesNum     = useSpringNumber( props?.likes );
   const downloadsNum = useSpringNumber( props?.downloads?.total );
@@ -53,12 +61,12 @@ export function PhotoStatsDialog( props: PhotoStatsDialogProps ) {
         src = { props?.user?.profile_image?.small }
         alt = { props?.user?.username } />
       <Link href = { 'https://unsplash.com/@' + props?.user?.username }>
-        { props?.user?.username }
+        { props?.user?.username || '' }
       </Link>
     </div>,
-    <animated.span>{ viewsNum.to( val => val.toFixed( 0 )) }</animated.span>,
-    <animated.span>{ likesNum.to( val => val.toFixed( 0 )) }</animated.span>,
-    <animated.span>{ downloadsNum.to( val => val.toFixed( 0 )) }</animated.span>,
+    <a.span>{ viewsNum.to( val => val.toFixed( 0 )) }</a.span>,
+    <a.span>{ likesNum.to( val => val.toFixed( 0 )) }</a.span>,
+    <a.span>{ downloadsNum.to( val => val.toFixed( 0 )) }</a.span>,
     new Date( props?.created_at ).toLocaleDateString('en-UK')
   ];
 
@@ -70,28 +78,35 @@ export function PhotoStatsDialog( props: PhotoStatsDialogProps ) {
         <DialogTitle>
           <Tooltip title = "Close">
             <IconButton
-              edge = "start"
-              color = "inherit"
+              style   = {{ marginRight: 5 }}
+              edge    = "start"
+              color   = "inherit"
               onClick = { props.onClose }>
               <Close />
             </IconButton>
           </Tooltip>
-          { props?.description }
+          { props?.description || '' }
         </DialogTitle>
-        <DialogContent>
-          <div style = {{ display: 'flex', margin: 15 }}>
-            <img
-              style  = {{
-                margin: 'auto',
-                borderRadius: 15,
-                maxHeight: '75vh',
-                maxWidth: '100%'
-              }}
-              src    = { props?.urls?.full }
-              alt    = { props.alt_description as string } />
+
+        <DialogContent style = {{ height: '100vh' }}>
+          <div style = {{ display: 'flex', height: '100%', justifyContent: 'center', alignItems: 'center' }}>
+            <Fade in = { !isPhotoLoaded } unmountOnExit>
+              <CircularProgress />
+            </Fade>
+            <Grow in = { isPhotoLoaded }>
+              <img
+                style = {{ maxWidth: '100%', maxHeight: '75vh' }}
+                hidden = { !isPhotoLoaded }
+                onLoad = { () => setPhotoLoad( true ) }
+                src    = { props?.urls?.full }
+                alt    = { props.alt_description as string }
+              />
+            </Grow>
           </div>
-          <Divider />
-          <TableContainer component={ Paper }>
+        </DialogContent>
+
+        <DialogActions>
+          <TableContainer component = { Paper }>
             <Table>
               <TableHead>
                 <TableRow>
@@ -119,14 +134,6 @@ export function PhotoStatsDialog( props: PhotoStatsDialogProps ) {
               </TableBody>
             </Table>
           </TableContainer>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            variant = "outlined"
-            onClick = { props.onClose }
-            fullWidth>
-            Close
-          </Button>
         </DialogActions>
     </Dialog>
   )
