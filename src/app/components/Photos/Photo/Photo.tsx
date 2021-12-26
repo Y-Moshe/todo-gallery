@@ -6,6 +6,9 @@ import { makeStyles, createStyles, Link } from '@material-ui/core';
 
 import { IPhoto } from '../../../types';
 
+const PHOTO_WIDTH  = 256;
+const PHOTO_HEIGHT = 256;
+
 const useStyles = makeStyles(({ palette }) => createStyles({
   photoStyle: {
     position: 'relative',
@@ -16,7 +19,7 @@ const useStyles = makeStyles(({ palette }) => createStyles({
     borderRadius: 15,
     color: 'white',
     cursor: 'pointer',
-    width: 256
+    width: PHOTO_WIDTH
   },
   titleStyle: {
     position: 'absolute',
@@ -51,9 +54,6 @@ const useStyles = makeStyles(({ palette }) => createStyles({
   }
 }));
 
-const PHOTO_WIDTH  = 256;
-const PHOTO_HEIGHT = 256;
-
 interface PhotoProps extends IPhoto {
   onClick: ( photo: IPhoto ) => void;
 }
@@ -61,11 +61,13 @@ interface PhotoProps extends IPhoto {
 export function Photo( props: PhotoProps ) {
   const [ isLoading, setIsLoading ] = useState( true );
   const classes    = useStyles();
+
   const bounceAnim = useSpring({
-    from: { transform: 'scale(0.8)' },
-    to: { transform: 'scale(1)' },
+    from: { transform: 'scale(0.85)' },
+    to:   { transform: 'scale(1)' },
     reset: true
   });
+
   const [ slideAnim, slideAnimCtrl ] = useSpring(() => ({
     from: { transform: 'scale(0)' },
     config: {
@@ -98,6 +100,7 @@ export function Photo( props: PhotoProps ) {
       {
         isLoading &&
         <Blurhash
+          className = { classes.photoStyle }
           hash   = { props.blur_hash as string }
           width  = { PHOTO_WIDTH }
           height = { PHOTO_HEIGHT } />
@@ -114,7 +117,7 @@ export function Photo( props: PhotoProps ) {
           src    = { props.urls.small }
           alt    = { props.alt_description as string }
           onLoad = { () => setTimeout(() => setIsLoading( false ), 1000)  }
-          width = { PHOTO_WIDTH }
+          width  = { PHOTO_WIDTH }
         />
         {
           !isLoading &&
