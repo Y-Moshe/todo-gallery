@@ -18,23 +18,23 @@ export default function App() {
       type: appearance
     }
   });
-  
+
   useEffect(() => {
-    getPhotos( currentPage + 1, itemsPerPage )
+    getPhotos( currentPage, itemsPerPage )
       .then( response => {
         setPhotos( response?.results || [] );
         setTotalItems(  response?.total || 0 );
     }).catch( error => console.log( error ));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [ itemsPerPage ]);
 
   const handlePageChange = ( latestPage: number ) => {
     getPhotos( latestPage + 1, itemsPerPage )
     .then( response => {
-        setDirectionAnim( currentPage < latestPage ? 'right' : 'left' );
-        setCurrentPage( latestPage );
-        setPhotos( response?.results || [] );
-        setTotalItems(  response?.total || 0 );
+      setDirectionAnim( currentPage < latestPage ? 'right' : 'left' );
+      setCurrentPage( latestPage );
+      setPhotos( response?.results || [] );
+      setTotalItems(  response?.total || 0 );
     }).catch( error => console.log( error ));
   };
 
