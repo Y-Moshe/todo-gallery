@@ -5,18 +5,18 @@ import { PaletteType, makeStyles, createStyles } from '@material-ui/core';
 import { Photo } from '../../components';
 import { DirectionAnimation, IPhoto } from '../../types';
 
-const useStyles = makeStyles(({ palette }) => createStyles({
+const useStyles = makeStyles(() => createStyles({
   galleryContainer: {
     flexGrow: 1,
-    margin: 50,
+    margin: 25,
     display: 'grid',
     gap: 24,
     justifyContent: 'center',
     gridTemplateColumns: '256px',
-    '@media (min-width: 512px)': {
+    '@media (min-width: 620px)': {
       gridTemplateColumns: '256px 256px'
     },
-    '@media (min-width: 768px)': {
+    '@media (min-width: 900px)': {
       gridTemplateColumns: '256px 256px 256px'
     }
   }
