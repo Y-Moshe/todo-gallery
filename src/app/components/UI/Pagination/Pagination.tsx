@@ -42,8 +42,10 @@ export function Pagination( props: PaginationProps ) {
         page         = { props.currentPage }
         rowsPerPage  = { props.itemsPerPage }
         onPageChange = { ( e, page ) => props.onPageChange( page ) }
-        rowsPerPageOptions = { ITEMS_PER_PAGE_OPTIONS }
-        onRowsPerPageChange = { e => props.onItemsPerPageChange( +e.target.value ) } />
+        rowsPerPageOptions  = { ITEMS_PER_PAGE_OPTIONS }
+        labelDisplayedRows  = { p => `Page ${ p.page + 1 } of ${ Math.round( p.count / ( p.to - p.from ) ) }` }
+        onRowsPerPageChange = { e => props.onItemsPerPageChange( +e.target.value ) }
+      />
     </a.div>
   )
 }
