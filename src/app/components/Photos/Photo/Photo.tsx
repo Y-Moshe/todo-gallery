@@ -6,20 +6,23 @@ import { makeStyles, createStyles, Link } from '@material-ui/core';
 
 import { IPhoto } from '../../../types';
 
-const PHOTO_WIDTH  = 256;
-const PHOTO_HEIGHT = 256;
+function generateRandomHeight() {
+  const min = 200;
+  const max = 320;
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
 
 const useStyles = makeStyles(({ palette }) => createStyles({
   photoStyle: {
     position: 'relative',
-    margin: 15,
     boxShadow: `0 0 5px ${ palette.type === 'light'
       ? palette.grey[500]
       : palette.grey[900] }`,
     borderRadius: 15,
     color: 'white',
     cursor: 'pointer',
-    width: PHOTO_WIDTH
+    display: 'flex',
+    flexDirection: 'column',
   },
   titleStyle: {
     position: 'absolute',
@@ -102,8 +105,8 @@ export function Photo( props: PhotoProps ) {
         <Blurhash
           className = { classes.photoStyle }
           hash   = { props.blur_hash as string }
-          width  = { PHOTO_WIDTH }
-          height = { PHOTO_HEIGHT } />
+          width  = { 256 }
+          height = { generateRandomHeight() } />
       }
       <a.div
         style = { bounceAnim }
@@ -117,7 +120,6 @@ export function Photo( props: PhotoProps ) {
           src    = { props.urls.small }
           alt    = { props.alt_description as string }
           onLoad = { () => setTimeout(() => setIsLoading( false ), 1000)  }
-          width  = { PHOTO_WIDTH }
         />
         {
           !isLoading &&

@@ -19,6 +19,11 @@ const useStyles = makeStyles(() => createStyles({
     '@media (min-width: 900px)': {
       gridTemplateColumns: '256px 256px 256px'
     }
+  },
+  galleryColumn: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 24
   }
 }));
 
@@ -60,9 +65,9 @@ export function Photos( props: PhotosProps ) {
 
   return (
     <div className = { classes.galleryContainer }>
-      <div>{ photoList.slice(0, itemsPerColumn).map( item => item ) }</div>
-      <div>{ photoList.slice(itemsPerColumn, itemsPerColumn*2).map( item => item ) }</div>
-      <div>{ photoList.slice(itemsPerColumn*2, itemsPerColumn*3).map( item => item ) }</div>
+      <div className = { classes.galleryColumn }>{ photoList.slice(0, itemsPerColumn).map( item => item ) }</div>
+      <div className = { classes.galleryColumn }>{ photoList.slice(itemsPerColumn, itemsPerColumn*2).map( item => item ) }</div>
+      <div className = { classes.galleryColumn }>{ photoList.slice(itemsPerColumn*2, itemsPerColumn*3).map( item => item ) }</div>
     </div>
   )
 }
